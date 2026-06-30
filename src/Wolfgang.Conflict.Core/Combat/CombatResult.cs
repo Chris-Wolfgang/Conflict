@@ -4,7 +4,7 @@ namespace Wolfgang.Conflict.Core.Combat;
 /// Outcome of a single resolved shot.
 /// </summary>
 /// <param name="HitChancePercent">
-/// Final hit chance the resolver computed (0–100), exposed for UI preview
+/// Final hit chance the resolver computed, clamped to [5, 95], exposed for UI preview
 /// and for log/replay reconstruction.
 /// </param>
 /// <param name="HitRoll">

@@ -86,6 +86,16 @@ public static class CombatResolver
 
     private static void ValidateAttempt(CombatAttempt attempt)
     {
+        if (attempt.Weapon is null)
+        {
+            throw new InvalidOperationException("CombatAttempt.Weapon must not be null.");
+        }
+
+        if (attempt.Weapon.DamageByArmor is null)
+        {
+            throw new InvalidOperationException("CombatAttempt.Weapon.DamageByArmor must not be null.");
+        }
+
         if (!attempt.HasLineOfSight)
         {
             throw new InvalidOperationException("Attacker has no line of sight to defender.");

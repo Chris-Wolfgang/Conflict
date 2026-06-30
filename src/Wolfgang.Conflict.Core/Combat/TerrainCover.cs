@@ -10,6 +10,7 @@ namespace Wolfgang.Conflict.Core.Combat;
 public static class TerrainCover
 {
     /// <summary>To-hit percentage point reduction provided by occupying <paramref name="terrain"/>.</summary>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="terrain"/> is not a recognized value.</exception>
     public static int CoverFor(Terrain terrain) => terrain switch
     {
         Terrain.Plain => 0,
@@ -18,6 +19,6 @@ public static class TerrainCover
         Terrain.Urban => 20,
         Terrain.Mountain => 25,
         Terrain.Water => 0,
-        _ => 0
+        _ => throw new ArgumentOutOfRangeException(nameof(terrain), terrain, "Unrecognized terrain type.")
     };
 }
