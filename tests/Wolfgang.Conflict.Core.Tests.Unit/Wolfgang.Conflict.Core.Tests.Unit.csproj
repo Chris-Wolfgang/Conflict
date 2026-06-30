@@ -29,4 +29,8 @@
     <ProjectReference Include="..\..\src\Wolfgang.Conflict.Core\Wolfgang.Conflict.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="..\..\data\factions\*.json" Link="data\factions\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
 </Project>
