@@ -133,6 +133,42 @@ public class HexPathfinderTests
 
 
     [Fact]
+    public void FindPath_throws_when_neighbor_cost_is_zero()
+    {
+        var start = HexCoord.Origin;
+        var goal = new HexCoord(1, 0);
+
+        IEnumerable<(HexCoord, int)> ZeroNeighbors(HexCoord hex) =>
+            hex.Neighbors().Select(n => (n, 0));
+
+        Assert.Throws<InvalidOperationException>
+        (
+            () => HexPathfinder.FindPath(start, goal, ZeroNeighbors)
+        );
+    }
+
+
+    [Fact]
+    public void FindPath_throws_when_maxCost_is_negative()
+    {
+        Assert.Throws<ArgumentOutOfRangeException>
+        (
+            () => HexPathfinder.FindPath(HexCoord.Origin, new HexCoord(1, 0), UniformNeighbors, maxCost: -1)
+        );
+    }
+
+
+    [Fact]
+    public void FindPath_throws_when_maxCost_is_negative_even_when_start_equals_goal()
+    {
+        Assert.Throws<ArgumentOutOfRangeException>
+        (
+            () => HexPathfinder.FindPath(HexCoord.Origin, HexCoord.Origin, UniformNeighbors, maxCost: -1)
+        );
+    }
+
+
+    [Fact]
     public void FindPath_throws_when_getNeighbors_is_null()
     {
         Assert.Throws<ArgumentNullException>

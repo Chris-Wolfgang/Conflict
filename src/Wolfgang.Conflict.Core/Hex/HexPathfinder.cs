@@ -16,11 +16,14 @@ public static class HexPathfinder
     /// <param name="getNeighbors">
     /// Function returning the passable neighbors of a hex along with the
     /// cost of moving from that hex to each neighbor. Costs must be
-    /// non-negative integers (typically &gt;= 1) for the heuristic to remain admissible.
+    /// positive integers (&gt;= 1). Zero or negative costs break the
+    /// distance heuristic's admissibility and would allow A* to return
+    /// a non-optimal path.
     /// </param>
     /// <param name="maxCost">
-    /// Optional upper bound on total path cost. If the cheapest path
-    /// would exceed this, the search returns <see langword="null"/>.
+    /// Optional upper bound on total path cost. Must be non-negative when
+    /// supplied. If the cheapest path would exceed this, the search returns
+    /// <see langword="null"/>.
     /// </param>
     /// <returns>
     /// The cheapest path as a <see cref="HexPath"/>, or <see langword="null"/>
@@ -29,8 +32,14 @@ public static class HexPathfinder
     /// <exception cref="ArgumentNullException">
     /// <paramref name="getNeighbors"/> is <see langword="null"/>.
     /// </exception>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// <paramref name="maxCost"/> is negative.
+    /// </exception>
     /// <exception cref="InvalidOperationException">
-    /// <paramref name="getNeighbors"/> returned a negative edge cost.
+    /// <paramref name="getNeighbors"/> returned a non-positive edge cost.
+    /// </exception>
+    /// <exception cref="OverflowException">
+    /// Accumulated path cost or A* priority overflows <see cref="int"/>.
     /// </exception>
     public static HexPath? FindPath
     (
@@ -41,6 +50,8 @@ public static class HexPathfinder
     )
     {
         ArgumentNullException.ThrowIfNull(getNeighbors);
+
+        if (maxCost is < 0) throw new ArgumentOutOfRangeException(nameof(maxCost), maxCost, "maxCost must be non-negative.");
 
         if (start == goal)
         {
@@ -63,15 +74,18 @@ public static class HexPathfinder
 
             foreach (var (next, stepCost) in getNeighbors(current))
             {
-                if (stepCost < 0)
+                if (stepCost < 1)
                 {
                     throw new InvalidOperationException
                     (
-                        $"Negative edge cost from {current} to {next}: {stepCost}."
+                        $"Non-positive edge cost from {current} to {next}: {stepCost}. "
+                        + "A*'s distance heuristic requires stepCost >= 1 to remain admissible."
                     );
                 }
 
-                var newCost = currentCost + stepCost;
+                // checked: prevents int wraparound from corrupting cost comparisons
+                // or maxCost pruning on pathological inputs.
+                int newCost = checked(currentCost + stepCost);
 
                 if (maxCost is { } cap && newCost > cap)
                 {
@@ -85,7 +99,7 @@ public static class HexPathfinder
 
                 costSoFar[next] = newCost;
                 cameFrom[next] = current;
-                var priority = newCost + next.DistanceTo(goal);
+                int priority = checked(newCost + next.DistanceTo(goal));
                 frontier.Enqueue(next, priority);
             }
         }
