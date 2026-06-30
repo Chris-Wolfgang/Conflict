@@ -36,9 +36,9 @@ public static class HexLine
 
     private static HexCoord CubeRound(double q, double r, double s)
     {
-        var rq = (int)Math.Round(q);
-        var rr = (int)Math.Round(r);
-        var rs = (int)Math.Round(s);
+        var rq = (int)Math.Round(q, MidpointRounding.AwayFromZero);
+        var rr = (int)Math.Round(r, MidpointRounding.AwayFromZero);
+        var rs = (int)Math.Round(s, MidpointRounding.AwayFromZero);
 
         var dq = Math.Abs(rq - q);
         var dr = Math.Abs(rr - r);

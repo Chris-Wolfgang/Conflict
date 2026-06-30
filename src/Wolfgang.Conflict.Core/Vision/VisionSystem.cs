@@ -33,10 +33,19 @@ public sealed class VisionSystem
     /// Every hex visible to <paramref name="factionId"/> in the given state.
     /// </summary>
     /// <exception cref="ArgumentNullException">An argument is <see langword="null"/>.</exception>
+    /// <exception cref="InvalidOperationException"><paramref name="factionId"/> is not a known faction.</exception>
     public HashSet<HexCoord> ComputeVisibility(GameState state, string factionId)
     {
         ArgumentNullException.ThrowIfNull(state);
         ArgumentNullException.ThrowIfNull(factionId);
+
+        if (!_factions.ContainsKey(factionId))
+        {
+            throw new InvalidOperationException
+            (
+                $"Unknown faction id '{factionId}'."
+            );
+        }
 
         var visible = new HashSet<HexCoord>();
 
@@ -64,9 +73,20 @@ public sealed class VisionSystem
     /// — aircraft see across forest, urban, and mountain.
     /// </param>
     /// <exception cref="ArgumentNullException"><paramref name="state"/> is <see langword="null"/>.</exception>
+    /// <exception cref="InvalidOperationException"><paramref name="from"/> or <paramref name="to"/> is not on the map.</exception>
     public static bool HasLineOfSight(GameState state, HexCoord from, HexCoord to, bool observerIsAirborne)
     {
         ArgumentNullException.ThrowIfNull(state);
+
+        if (!state.Map.TryGetTile(from, out _))
+        {
+            throw new InvalidOperationException($"Observer hex {from} is not on the map.");
+        }
+
+        if (!state.Map.TryGetTile(to, out _))
+        {
+            throw new InvalidOperationException($"Target hex {to} is not on the map.");
+        }
 
         if (from == to)
         {
@@ -105,9 +125,12 @@ public sealed class VisionSystem
         HashSet<HexCoord> visible
     )
     {
-        var bonus = state.Map.TryGetTile(origin, out var originTile)
-            ? TerrainVision.ElevationSightBonus(originTile.Terrain)
-            : 0;
+        if (!state.Map.TryGetTile(origin, out var originTile))
+        {
+            throw new InvalidOperationException($"Unit origin {origin} is not on the map.");
+        }
+
+        var bonus = TerrainVision.ElevationSightBonus(originTile.Terrain);
         var effectiveRange = unitType.SightRange + bonus;
 
         foreach (var hex in state.Map.Coords)
