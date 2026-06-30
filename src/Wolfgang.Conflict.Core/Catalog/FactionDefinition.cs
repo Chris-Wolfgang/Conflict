@@ -9,7 +9,7 @@ namespace Wolfgang.Conflict.Core.Catalog;
 /// alternative-history rosters, or non-modern eras (WW2, sci-fi, fantasy)
 /// can ship as data without engine changes.
 /// </remarks>
-/// <param name="Id">Stable identifier (e.g. <c>"us"</c>, <c>"ussr"</c>).</param>
+/// <param name="Id">Stable identifier (e.g. <c>"blue"</c>, <c>"red"</c>).</param>
 /// <param name="DisplayName">Human-readable name shown in the UI.</param>
 /// <param name="Color">Faction color as a CSS hex string (e.g. <c>"#1e88e5"</c>).</param>
 /// <param name="WeaponSystems">Weapon systems used by this faction's units, keyed by ID.</param>
