@@ -10,8 +10,8 @@ namespace Wolfgang.Conflict.Core.Tests.Unit.Catalog;
 public class BundledFactionFilesTests
 {
     [Theory]
-    [InlineData("us.json",   "blue",   "Blue",  6, 9)]
-    [InlineData("ussr.json", "red",    "Red",         6, 9)]
+    [InlineData("blue.json",   "blue",   "Blue",  6, 9)]
+    [InlineData("red.json", "red",    "Red",         6, 9)]
     public async Task Bundled_faction_file_loads_with_expected_metadata_and_catalog_size
     (
         string fileName,
@@ -34,8 +34,8 @@ public class BundledFactionFilesTests
 
 
     [Theory]
-    [InlineData("us.json")]
-    [InlineData("ussr.json")]
+    [InlineData("blue.json")]
+    [InlineData("red.json")]
     public async Task Bundled_faction_file_includes_all_six_v1_archetypes(string fileName)
     {
         var path = Path.Combine(AppContext.BaseDirectory, "data", "factions", fileName);
@@ -54,8 +54,8 @@ public class BundledFactionFilesTests
 
 
     [Theory]
-    [InlineData("us.json")]
-    [InlineData("ussr.json")]
+    [InlineData("blue.json")]
+    [InlineData("red.json")]
     public async Task Bundled_faction_infantry_can_capture_and_other_archetypes_cannot(string fileName)
     {
         var path = Path.Combine(AppContext.BaseDirectory, "data", "factions", fileName);
@@ -78,8 +78,8 @@ public class BundledFactionFilesTests
 
 
     [Theory]
-    [InlineData("us.json")]
-    [InlineData("ussr.json")]
+    [InlineData("blue.json")]
+    [InlineData("red.json")]
     public async Task Bundled_faction_aircraft_can_fly_and_ground_units_cannot(string fileName)
     {
         var path = Path.Combine(AppContext.BaseDirectory, "data", "factions", fileName);
