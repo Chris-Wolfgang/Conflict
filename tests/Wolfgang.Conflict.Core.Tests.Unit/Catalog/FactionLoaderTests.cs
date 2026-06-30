@@ -6,8 +6,8 @@ public class FactionLoaderTests
 {
     private const string MinimalFactionJson = """
         {
-          "id": "us",
-          "displayName": "United States",
+          "id": "blue",
+          "displayName": "Blue",
           "color": "#1e88e5",
           "weapons": [
             {
@@ -48,8 +48,8 @@ public class FactionLoaderTests
     {
         var faction = FactionLoader.Load(MinimalFactionJson);
 
-        Assert.Equal("us", faction.Id);
-        Assert.Equal("United States", faction.DisplayName);
+        Assert.Equal("blue", faction.Id);
+        Assert.Equal("Blue", faction.DisplayName);
         Assert.Equal("#1e88e5", faction.Color);
     }
 
@@ -154,7 +154,7 @@ public class FactionLoaderTests
     {
         const string json = """
             {
-              "displayName": "United States",
+              "displayName": "Blue",
               "color": "#1e88e5",
               "weapons": [],
               "units": []
@@ -172,8 +172,8 @@ public class FactionLoaderTests
     {
         const string json = """
             {
-              "id": "us",
-              "displayName": "United States",
+              "id": "blue",
+              "displayName": "Blue",
               "color": "#1e88e5",
               "weapons": [],
               "units": [
@@ -202,8 +202,8 @@ public class FactionLoaderTests
     {
         const string json = """
             {
-              "id": "us",
-              "displayName": "United States",
+              "id": "blue",
+              "displayName": "Blue",
               "color": "#1e88e5",
               "weapons": [
                 { "id": "dup", "displayName": "A", "minRange": 1, "maxRange": 1, "accuracy": 50, "damageByArmor": {}, "ammoCapacity": 1 },

@@ -10,8 +10,8 @@ namespace Wolfgang.Conflict.Core.Tests.Unit.Catalog;
 public class BundledFactionFilesTests
 {
     [Theory]
-    [InlineData("us.json",   "us",   "United States",  6, 9)]
-    [InlineData("ussr.json", "ussr", "Russia",         6, 9)]
+    [InlineData("us.json",   "blue",   "Blue",  6, 9)]
+    [InlineData("ussr.json", "red",    "Red",         6, 9)]
     public async Task Bundled_faction_file_loads_with_expected_metadata_and_catalog_size
     (
         string fileName,
