@@ -105,7 +105,7 @@ public static class FactionLoader
 
         foreach (var unit in units.Values)
         {
-            foreach (var weaponId in unit.WeaponSystemIds)
+            foreach (var weaponId in unit.WeaponSystemIds ?? [])
             {
                 if (!weapons.ContainsKey(weaponId))
                 {
@@ -151,6 +151,14 @@ public static class FactionLoader
 
         foreach (var item in items)
         {
+            if (item is null)
+            {
+                throw new InvalidOperationException
+                (
+                    $"Faction definition contains a null {itemKind} entry."
+                );
+            }
+
             var key = keySelector(item);
             RequireNonEmpty(key, $"{itemKind} id");
 
