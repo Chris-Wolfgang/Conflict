@@ -103,8 +103,15 @@ public static class FactionLoader
             "unit type"
         );
 
+        foreach (var weapon in weapons.Values)
+        {
+            ValidateWeapon(weapon);
+        }
+
         foreach (var unit in units.Values)
         {
+            ValidateUnit(unit);
+
             foreach (var weaponId in unit.WeaponSystemIds ?? [])
             {
                 if (!weapons.ContainsKey(weaponId))
@@ -125,6 +132,48 @@ public static class FactionLoader
             weapons,
             units
         );
+    }
+
+
+    private static void ValidateWeapon(WeaponSystemDefinition w)
+    {
+        RequireNonEmpty(w.DisplayName, $"weapon '{w.Id}' displayName");
+
+        if (w.MinRange < 0)
+            throw new InvalidOperationException($"Weapon '{w.Id}' minRange must be >= 0 (got {w.MinRange}).");
+
+        if (w.MaxRange < w.MinRange)
+            throw new InvalidOperationException($"Weapon '{w.Id}' maxRange ({w.MaxRange}) must be >= minRange ({w.MinRange}).");
+
+        if (w.Accuracy is < 0 or > 100)
+            throw new InvalidOperationException($"Weapon '{w.Id}' accuracy must be 0–100 (got {w.Accuracy}).");
+
+        if (w.AmmoCapacity < 0)
+            throw new InvalidOperationException($"Weapon '{w.Id}' ammoCapacity must be >= 0 (got {w.AmmoCapacity}).");
+
+        if (w.DamageByArmor is null)
+            throw new InvalidOperationException($"Weapon '{w.Id}' damageByArmor is required.");
+    }
+
+
+    private static void ValidateUnit(UnitTypeDefinition u)
+    {
+        RequireNonEmpty(u.DisplayName, $"unit '{u.Id}' displayName");
+
+        if (u.MaxHp <= 0)
+            throw new InvalidOperationException($"Unit '{u.Id}' maxHp must be > 0 (got {u.MaxHp}).");
+
+        if (u.FuelCapacity < 0)
+            throw new InvalidOperationException($"Unit '{u.Id}' fuelCapacity must be >= 0 (got {u.FuelCapacity}).");
+
+        if (u.SightRange < 0)
+            throw new InvalidOperationException($"Unit '{u.Id}' sightRange must be >= 0 (got {u.SightRange}).");
+
+        if (u.MovementPoints <= 0)
+            throw new InvalidOperationException($"Unit '{u.Id}' movementPoints must be > 0 (got {u.MovementPoints}).");
+
+        if (u.TerrainMovementCosts is null)
+            throw new InvalidOperationException($"Unit '{u.Id}' terrainMovementCosts is required.");
     }
 
 
